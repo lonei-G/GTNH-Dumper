@@ -5,9 +5,7 @@ import gtneioreplugin.util.DimensionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.Language;
 import net.minecraft.client.resources.LanguageManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.StatCollector;
 
 import java.io.File;
 import java.util.HashMap;
@@ -33,7 +31,7 @@ public class GTNHDimensionDumper extends WikiDumper {
     public Iterable<Object[]> dumpObject(int mode) {
         LinkedList<Object[]> list = new LinkedList<>();
 
-        Map<DimensionHelper.Dimension, String> originalNameMap = new HashMap<>();
+        Map<String, String> originalNameMap = new HashMap<>();
 
         Minecraft minecraft = Minecraft.getMinecraft();
         LanguageManager languageManager = minecraft.getLanguageManager();
@@ -41,21 +39,24 @@ public class GTNHDimensionDumper extends WikiDumper {
         languageManager.setCurrentLanguage(new Language("en_US", "US", "English (United States)", false));
         languageManager.onResourceManagerReload(minecraft.getResourceManager());
 
-        for (DimensionHelper.Dimension dimension : DimensionHelper.ALL_DIMENSIONS) {
-            originalNameMap.put(dimension, DimensionHelper.getDimLocalizedName(DimensionHelper.getFullName(dimension.abbr())));
+        for (String abbr : DimensionHelper.DimNameTrimmed) {
+            originalNameMap.put(abbr, DimensionHelper.getFullName(abbr));
         }
 
         languageManager.setCurrentLanguage(currentLanguage);
         languageManager.onResourceManagerReload(minecraft.getResourceManager());
 
-        for (DimensionHelper.Dimension dimension : DimensionHelper.ALL_DIMENSIONS) {
+        for (int i = 0; i < DimensionHelper.DimNameTrimmed.length; i++) {
+            String abbr = DimensionHelper.DimNameTrimmed[i];
+            String internalName = i < DimensionHelper.DimName.length ? DimensionHelper.DimName[i] : abbr;
+            String displayed = i < DimensionHelper.DimNameDisplayed.length ? DimensionHelper.DimNameDisplayed[i] : abbr;
             list.add(new Object[] {
-                dimension.abbr(),
-                dimension.internalName(),
-                dimension.fullName(),
-                originalNameMap.get(dimension),
-                DimensionHelper.getDimLocalizedName(DimensionHelper.getFullName(dimension.abbr())),
-                dimension.tierKey().replace("gtnop.tier.", "")
+                abbr,
+                internalName,
+                DimensionHelper.getFullName(abbr),
+                originalNameMap.get(abbr),
+                displayed,
+                ""
             });
         }
         return list;

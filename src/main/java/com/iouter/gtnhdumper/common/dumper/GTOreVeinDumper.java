@@ -1,7 +1,7 @@
 package com.iouter.gtnhdumper.common.dumper;
 
 import com.iouter.gtnhdumper.common.base.WikiDumper;
-import gtneioreplugin.util.DimensionHelper;
+import com.iouter.gtnhdumper.common.utils.GtCompat;
 import gtneioreplugin.util.GT5OreLayerHelper;
 import net.minecraft.util.ChatComponentTranslation;
 
@@ -45,21 +45,21 @@ public class GTOreVeinDumper extends WikiDumper {
     @Override
     public Iterable<Object[]> dumpObject(int mode) {
         LinkedList<Object[]> list = new LinkedList<>();
-        for (GT5OreLayerHelper.OreLayerWrapper vein : GT5OreLayerHelper.getOreVeinsByName().values()) {
+        for (GT5OreLayerHelper.OreLayerWrapper vein : GT5OreLayerHelper.mapOreLayerWrapper.values()) {
             String[] heightRange = vein.worldGenHeightRange.split("-");
             list.add(new Object[]{
                 vein.veinName,
                 vein.localizedName,
-                vein.mPrimaryVeinMaterial.getInternalName(),
-                vein.mSecondaryMaterial.getInternalName(),
-                vein.mBetweenMaterial.getInternalName(),
-                vein.mSporadicMaterial.getInternalName(),
+                GtCompat.materialName(vein.mPrimaryVeinMaterial),
+                GtCompat.materialName(vein.mSecondaryMaterial),
+                GtCompat.materialName(vein.mBetweenMaterial),
+                GtCompat.materialName(vein.mSporadicMaterial),
                 vein.size,
                 vein.density,
                 vein.randomWeight,
                 heightRange[0],
                 heightRange[1],
-                vein.abbrDimNames
+                GtCompat.formatEnabledDimensions(vein.allowedDimWithOrigNames)
             });
         }
 

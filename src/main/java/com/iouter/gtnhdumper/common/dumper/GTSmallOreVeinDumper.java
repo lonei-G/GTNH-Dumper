@@ -1,8 +1,7 @@
 package com.iouter.gtnhdumper.common.dumper;
 
 import com.iouter.gtnhdumper.common.base.WikiDumper;
-import gtneioreplugin.util.DimensionHelper;
-import gtneioreplugin.util.GT5OreLayerHelper;
+import com.iouter.gtnhdumper.common.utils.GtCompat;
 import gtneioreplugin.util.GT5OreSmallHelper;
 import net.minecraft.util.ChatComponentTranslation;
 
@@ -40,15 +39,15 @@ public class GTSmallOreVeinDumper extends WikiDumper {
     @Override
     public Iterable<Object[]> dumpObject(int mode) {
         LinkedList<Object[]> list = new LinkedList<>();
-        for (GT5OreSmallHelper.OreSmallWrapper vein : GT5OreSmallHelper.SMALL_ORES_BY_NAME.values()) {
+        for (GT5OreSmallHelper.OreSmallWrapper vein : GT5OreSmallHelper.mapOreSmallWrapper.values()) {
             String[] heightRange = vein.worldGenHeightRange.split("-");
             list.add(new Object[] {
                 vein.oreGenName,
-                vein.material.getInternalName(),
+                GtCompat.materialName(vein.getOreMaterial()),
                 vein.amountPerChunk,
                 heightRange[0],
                 heightRange[1],
-                vein.enabledDims
+                GtCompat.formatEnabledDimensions(vein.allowedDimWithOrigNames)
             });
         }
         return list;

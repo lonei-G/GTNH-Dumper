@@ -5,6 +5,7 @@ import com.iouter.gtnhdumper.Utils;
 import com.iouter.gtnhdumper.common.base.WikiDumper;
 import com.iouter.gtnhdumper.common.recipe.base.GTRecipeDumps;
 import com.iouter.gtnhdumper.common.recipe.utils.Transformer;
+import com.iouter.gtnhdumper.common.utils.GtCompat;
 import gregtech.api.GregTechAPI;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -167,7 +168,7 @@ public class GTMaterialDumper extends WikiDumper {
         if (orePrefixesMap == null) {
             orePrefixesMap = new LinkedHashMap<>();
         }
-        for (OrePrefixes prefix : OrePrefixes.VALUES) {
+        for (OrePrefixes prefix : OrePrefixes.values()) {
             ItemStack prefixStack = stackSupplier.apply(prefix);
             if (prefixStack == null) {
                 continue;
@@ -316,13 +317,13 @@ public class GTMaterialDumper extends WikiDumper {
     }
 
     private static void dumpGTMaterial(Materials m, Map<String, Map<String, Object>> totalMap) {
-        String name = m.getName();
+        String name = m.mName;
         Map<String, Object> materialMap = getMaterialMap(name, totalMap);
         materialMap.put(NAME, name);
         materialMap.put(DEFAULT_NAME, m.mDefaultLocalName);
-        materialMap.put(LOCALIZED_NAME, m.getLocalizedName());
-        materialMap.put(CHEMICAL_FORMULA, m.getChemicalFormula());
-        materialMap.put(FLAVOR_TEXT, m.getFlavorText());
+        materialMap.put(LOCALIZED_NAME, m.mLocalizedName);
+        materialMap.put(CHEMICAL_FORMULA, m.mChemicalFormula);
+        materialMap.put(FLAVOR_TEXT, "");
         materialMap.put(DURABILITY, m.mDurability);
         materialMap.put(TOOL_SPEED, m.mToolSpeed);
         materialMap.put(TOOL_QUALITY, m.mToolQuality);
@@ -337,13 +338,13 @@ public class GTMaterialDumper extends WikiDumper {
 
     private static void dumpBartMaterial(Werkstoff w, Map<String, Map<String, Object>> totalMap) {
         Materials m = w.getBridgeMaterial();
-        String name = m.getName();
+        String name = m.mName;
         Map<String, Object> materialMap = getMaterialMap(name, totalMap);
         materialMap.put(NAME, name);
         materialMap.put(DEFAULT_NAME, m.mDefaultLocalName);
-        materialMap.put(LOCALIZED_NAME, m.getLocalizedName());
-        materialMap.put(CHEMICAL_FORMULA, m.getChemicalFormula());
-        materialMap.put(FLAVOR_TEXT, m.getFlavorText());
+        materialMap.put(LOCALIZED_NAME, m.mLocalizedName);
+        materialMap.put(CHEMICAL_FORMULA, m.mChemicalFormula);
+        materialMap.put(FLAVOR_TEXT, "");
         materialMap.put(DURABILITY, m.mDurability);
         materialMap.put(TOOL_SPEED, m.mToolSpeed);
         materialMap.put(TOOL_QUALITY, m.mToolQuality);
@@ -398,7 +399,7 @@ public class GTMaterialDumper extends WikiDumper {
             // Fluid
             Materials m = fluidPipe.mMaterial;
             if (m != null)
-                name = fluidPipe.mMaterial.getName();
+                name = GtCompat.materialName(fluidPipe.mMaterial);
             else if (fluidPipe instanceof GTPPMTEFluidPipe) {
                 GTPPMTEFluidPipe gtppFluidPipe = (GTPPMTEFluidPipe) fluidPipe;
                 Material tempM = Material.mMaterialCache.get(gtppFluidPipe.pipeStats.defaultLocalName.toLowerCase());
@@ -420,7 +421,7 @@ public class GTMaterialDumper extends WikiDumper {
         } else if (pipeEntity instanceof MTEItemPipe) {
             MTEItemPipe itemPipe = (MTEItemPipe) pipeEntity;
             // Item
-            name = itemPipe.mMaterial.getName();
+            name = GtCompat.materialName(itemPipe.mMaterial);
             materialMap = getMaterialMap(name, totalMap);
             materialMap.put(PIPE, ITEM);
             String[] temp = itemPipe.getMetaName().split("_");
@@ -440,7 +441,7 @@ public class GTMaterialDumper extends WikiDumper {
             //Cable
             Materials m = cable.mMaterial;
             if (m != null)
-                name = cable.mMaterial.getName();
+                name = GtCompat.materialName(cable.mMaterial);
             else if (cable instanceof GTPPMTECable) {
                 GTPPMTECable gtppCable = (GTPPMTECable) cable;
                 String[] temp = gtppCable.getMetaName().split("\\.");

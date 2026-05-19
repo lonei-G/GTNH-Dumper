@@ -9,7 +9,7 @@ import com.iouter.gtnhdumper.common.utils.DynamicTexture;
 import com.iouter.gtnhdumper.common.utils.FBOHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.registry.GameData;
-import gregtech.common.blocks.GTBlockOre;
+import gregtech.common.blocks.BlockOres;
 import gregtech.common.items.ItemVolumetricFlask;
 import gtPlusPlus.core.block.base.BlockBaseOre;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -210,7 +210,7 @@ public class ItemIconDumper {
         fbo.end();
         if (itemStack.getItem() instanceof ItemBlock) {
             Block block = ((ItemBlock) itemStack.getItem()).field_150939_a;
-            if (CommonProxy.isGTLoaded && (block instanceof GTBlockOre || block instanceof BWMetaGeneratedOres || block instanceof BlockBaseOre)) {
+            if (CommonProxy.isGTLoaded && (block instanceof BlockOres || block instanceof BWMetaGeneratedOres || block instanceof BlockBaseOre)) {
                 return makeNonTransparentOpaque(fbo.saveToImage());
             }
         }

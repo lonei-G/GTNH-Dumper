@@ -94,9 +94,12 @@ public class GTDefaultHandlerRecipe{
                     ArrayList<Object> inputItems = new ArrayList<>();
                     inputItems.add(new RecipeItem(planetItem));
                     ArrayList<RecipeFluid> inputFluids = new ArrayList<>();
-                    inputFluids.add(new RecipeFluid(Materials.Hydrogen.getGas(0)));
-                    inputFluids.add(new RecipeFluid(Materials.Helium.getGas(0)));
-                    inputFluids.add(new RecipeFluid(Materials.RawStarMatter.getFluid(0)));
+                    if (Materials.Hydrogen != null && Materials.Hydrogen.getGas(1) != null) {
+                        inputFluids.add(new RecipeFluid(Materials.Hydrogen.getGas(1)).withAmount(recipe.getHydrogenRequirement()));
+                    }
+                    if (Materials.Helium != null && Materials.Helium.getGas(1) != null) {
+                        inputFluids.add(new RecipeFluid(Materials.Helium.getGas(1)).withAmount(recipe.getHeliumRequirement()));
+                    }
                     ArrayList<Object> outputItems = new ArrayList<>();
                     for (ItemStackLong itemStackLong : recipe.getOutputItems()) {
                         outputItems.add(new RecipeItem(itemStackLong.itemStack).withAmount(itemStackLong.stackSize));
